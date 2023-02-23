@@ -1,10 +1,10 @@
 variable "environment" {
-  descdescription = "an environment like prod, stage, sandbox, ..."
+  description = "an environment like prod, stage, sandbox, ..."
   type            = string
 }
 
 variable "cidr_block" {
-  descdescription = "a vpc cidr block"
+  description = "a vpc cidr block"
   type            = string
   default = "10.0.1.0/16"
 }
