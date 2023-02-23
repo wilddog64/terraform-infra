@@ -41,12 +41,6 @@ resource "aws_internet_gateway" "cloud" {
   }
 }
 
-# Attach the internet gateway to the VPC
-resource "aws_vpc_attachment" "cloud" {
-  vpc_id             = aws_vpc.cloud.id
-  internet_gateway_id = aws_internet_gateway.cloud.id
-}
-
 # Create a route table and add a route to the internet gateway
 resource "aws_route_table" "cloud" {
   vpc_id = aws_vpc.cloud.id
