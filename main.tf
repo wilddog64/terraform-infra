@@ -10,7 +10,7 @@ module "bastion" {
   vpc_id = module.vpc.id
   key_name = var.key_name
   instance_type = var.bastion_instance_type
-  vpc_public_subnet_id = module.vpc.public_subnet_id
+  vpc_public_subnet_id = module.vpc.public_subnet_id[0]
   cidr_blocks = [
     "216.9.31.182/32"
   ]
