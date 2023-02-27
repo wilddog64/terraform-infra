@@ -18,7 +18,7 @@ module "bastion" {
 
 
 module "ssh-inbound-acl" {
-  source = "./modules/inblund-network-acl/"
+  source = "./modules/inbound-network-acl/"
 
   vpc_id = module.vpc.id
   vpc_name = "${var.environment}-${module.vpc.id}"
