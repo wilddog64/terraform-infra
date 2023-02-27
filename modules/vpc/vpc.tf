@@ -66,12 +66,13 @@ resource "aws_eip" "nat" {
 resource "aws_nat_gateway" "public" {
   for_each = local.public_subnet_set
 
-  allocation_id = index(aws_eip.nat.*.id, each.value)
+  // allocation_id = index(aws_eip.nat.*.id, each.key)
+  allocation_id = aws_eip.nat[each.key].id
   // subnet_id = element(aws_subnet.public.*.id, count.index)
   subnet_id = aws_subnet.public[each.key].id
 
   tags = {
-    Name = "${var.environment}_public_nat_gw"
+    Name = "${var.environment}_public_nat_gw[${each.key}]"
   }
 }
 
