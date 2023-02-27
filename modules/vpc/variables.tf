@@ -12,7 +12,7 @@ variable "cidr_block" {
 variable "public_subnet_cidrblock" {
   description = "a public subnet cidr block"
   type = map(list(string))
-  default = {
+  default = { 
     "us-west-2a" = [
       "10.0.10.0/24",
       "10.0.20.0/24",
@@ -24,7 +24,7 @@ variable "public_subnet_cidrblock" {
 variable "private_subnet_cidrblock" {
   description = "a private subnet cidr block"
   type = map(list(string))
-  default = {
+  default = { 
     "us-west-2b" = [
       "10.0.70.0/24",
       "10.0.80.0/24",
