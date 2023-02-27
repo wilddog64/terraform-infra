@@ -1,11 +1,12 @@
 # Create the VPC
 
 locals {
-  public_subnet_az = keys(var.public_subnet_cidrblock)[0]
-  public_subnet_set = toset(var.public_subnet_cidrblock[local.public_subnet_az])
-
-  private_subnet_az = keys(var.private_subnet_cidrblock)[0]
-  private_subnet_set = toset(var.private_subnet_cidrblock[local.private_subnet_az])
+  public_az = keys(var.public_subnet_cidrblock)[0]
+  // public_subnet_set = toset(var.public_subnet_cidrblock[local.public_subnet_az])
+  public_subnet_set = {for s in var.public_subnet_cidrblock[local.public_az]: index(var.public_subnet_cidrblock[local.public_az], s) => s}
+  private_az = keys(var.private_subnet_cidrblock)[0]
+  // private_subnet_set = toset(var.private_subnet_cidrblock[local.private_subnet_az])
+  private_subnet_set = {for s in var.private_subnet_cidrblock[local.private_az]: index(var.private_subnet_cidrblock[local.private_az], s) => s}
 }
 
 resource "aws_vpc" "cloud" {
@@ -24,11 +25,11 @@ resource "aws_subnet" "public" {
 
   vpc_id            = aws_vpc.cloud.id
   cidr_block        = each.value
-  availability_zone = local.public_subnet_az
+  availability_zone = local.public_az
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "${var.environment}-${local.public_subnet_az}-${each.value}"
+    Name = "${var.environment}-${local.public_az}-${each.value}"
   }
 }
 
@@ -38,10 +39,10 @@ resource "aws_subnet" "private" {
 
   vpc_id            = aws_vpc.cloud.id
   cidr_block        = each.value
-  availability_zone = local.private_subnet_az
+  availability_zone = local.private_az
 
   tags = {
-    Name = "${var.environment}-${local.private_subnet_az}-${each.value}"
+    Name = "${var.environment}-${local.private_az}-${each.value}"
   }
 }
 
@@ -78,14 +79,33 @@ resource "aws_nat_gateway" "public" {
 
 # Create a route table and add a route to the internet gateway
 resource "aws_route_table" "cloud" {
+  for_each = aws_nat_gateway.public
+
   vpc_id = aws_vpc.cloud.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.cloud.id
+    // nat_gateway_id = index(aws_nat_gateway.public.*.id, count.index)
+    nat_gateway_id = aws_nat_gateway.public[each.key].id
   }
 
   tags = {
     Name = "${var.environment}_public_rt"
   }
+}
+
+resource "aws_route_table_association" "public" {
+  // count = length(aws_subnet.public)
+  for_each = local.public_subnet_set
+
+  subnet_id = aws_subnet.public[each.key].id
+  route_table_id = aws_route_table.cloud[each.key].id
+}
+
+resource "aws_route_table_association" "private" {
+  // count = length(aws_subnet.public)
+  for_each = local.private_subnet_set
+
+  subnet_id = aws_subnet.private[each.key].id
+  route_table_id = aws_route_table.cloud[each.key].id
 }
