@@ -2,10 +2,8 @@
 
 locals {
   public_az = keys(var.public_subnet_cidrblock)[0]
-  // public_subnet_set = toset(var.public_subnet_cidrblock[local.public_subnet_az])
   public_subnet_set = {for s in var.public_subnet_cidrblock[local.public_az]: index(var.public_subnet_cidrblock[local.public_az], s) => s}
   private_az = keys(var.private_subnet_cidrblock)[0]
-  // private_subnet_set = toset(var.private_subnet_cidrblock[local.private_subnet_az])
   private_subnet_set = {for s in var.private_subnet_cidrblock[local.private_az]: index(var.private_subnet_cidrblock[local.private_az], s) => s}
 }
 
