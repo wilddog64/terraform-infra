@@ -9,3 +9,7 @@ output "public_subnet_ids" {
 output "private_subnet_ids" {
   value = [for k, v in aws_subnet.private: v.id]
 }
+
+output "public_subnet_cidrs_blocks" {
+  value = local.public_subnet_set
+}
