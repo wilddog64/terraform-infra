@@ -10,14 +10,24 @@
 # Allow resources in this subnet to receive requests on the specified ports
 # ---------------------------------------------------------------------------------------------------------------------
 
+resource "aws_network_acl" "inbound" {
+  vpc_id     = var.vpc_id
+  subnet_ids = var.public_subnet_ids
+
+  tags = merge(
+    { "Name" = "${var.vpc_name}-public-subnets" },
+    var.custom_tags,
+  )
+}
+
 resource "aws_network_acl_rule" "allow_inbound" {
-  count          = var.num_inbound_cidr_blocks
-  network_acl_id = var.network_acl_id
+  for_each = var.public_subnet_set
+  network_acl_id = aws_network_acl.inbound.id
   rule_number    = var.ingress_rule_number + (count.index * 5)
   egress         = false
   protocol       = var.protocol
   rule_action    = "allow"
-  cidr_block     = element(var.inbound_cidr_blocks, count.index)
+  cidr_block     = each.value
   from_port      = var.inbound_from_port
   to_port        = var.inbound_to_port
 }
@@ -29,13 +39,13 @@ resource "aws_network_acl_rule" "allow_inbound" {
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_network_acl_rule" "allow_outbound_return" {
-  count          = var.num_inbound_cidr_blocks
-  network_acl_id = var.network_acl_id
+  for_each = var.public_subnet_set
+  network_acl_id = aws_network_acl.inbound.id
   rule_number    = var.egress_rule_number + (count.index * 5)
   egress         = true
   protocol       = var.protocol
   rule_action    = "allow"
-  cidr_block     = element(var.inbound_cidr_blocks, count.index)
+  cidr_block     = each.value
   from_port      = var.ephemeral_from_port
   to_port        = var.ephemeral_to_port
 }
