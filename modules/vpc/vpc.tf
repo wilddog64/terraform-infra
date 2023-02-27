@@ -54,6 +54,28 @@ resource "aws_internet_gateway" "cloud" {
   }
 }
 
+// create NAT elastic IPs
+resource "aws_eip" "nat" {
+  vpc = true
+  count = length(local.public_subnet_set)
+
+  tags = {
+    Name = "${var.environment}_nat_eip"
+  }
+}
+
+resource "aws_nat_gateway" "public" {
+  for_each = local.public_subnet_set
+
+  allocation_id = index(aws_eip.nat.*.id, each.value)
+  // subnet_id = element(aws_subnet.public.*.id, count.index)
+  subnet_id = aws_subnet.public[each.key].id
+
+  tags = {
+    Name = "${var.environment}_public_nat_gw"
+  }
+}
+
 # Create a route table and add a route to the internet gateway
 resource "aws_route_table" "cloud" {
   vpc_id = aws_vpc.cloud.id
