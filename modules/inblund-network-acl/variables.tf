@@ -13,16 +13,6 @@ variable "inbound_to_port" {
   type        = number
 }
 
-variable "inbound_cidr_blocks" {
-  description = "A list of CIDR blocks from which inbound connections should be allowed to var.inbound_ports"
-  type        = set
-}
-
-variable "num_inbound_cidr_blocks" {
-  description = "The number of CIDR blocks in var.inbound_cidr_blocks. We should be able to compute this automatically, but due to a Terraform limitation, we can't: https://github.com/hashicorp/terraform/issues/14677#issuecomment-302772685"
-  type        = number
-}
-
 variable "ingress_rule_number" {
   description = "The starting number to use for ingress rules that are added. Each ingress rule in an network ACL must have a unique rule number."
   type        = number
@@ -55,4 +45,30 @@ variable "ephemeral_to_port" {
   description = "Return traffic will be allowed on all ports between var.ephemeral_from_port and var.ephemeral_to_port, inclusive, from var.inbound_cidr_blocks"
   type        = number
   default     = 65535
+}
+
+variable "vpc_name" {
+  description = "a name of this vpc. mainly used for tagging the vpc resource"
+  type = string
+}
+
+variable "vpc_id" {
+  description = "a vpc id"
+  type = string
+}
+
+variable "public_subnet_ids" {
+  description = "a list of pubic subnet ids" 
+  type = list(string)
+}
+
+variable "public_subnet_cidr_blocks" {
+  description = "a list of public subnet cidr blocks"
+  type = map(string)
+}
+
+variable "custom_tags" {
+  description = "a dictionary of user prvided tags"
+  type = map(string)
+  default = {}
 }
