@@ -23,11 +23,6 @@ variable "num_inbound_cidr_blocks" {
   type        = number
 }
 
-variable "network_acl_id" {
-  description = "The id of the network ACL to which the new rules should be attached"
-  type        = string
-}
-
 variable "ingress_rule_number" {
   description = "The starting number to use for ingress rules that are added. Each ingress rule in an network ACL must have a unique rule number."
   type        = number
