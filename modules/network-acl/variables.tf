@@ -15,7 +15,7 @@ variable "inbound_to_port" {
 
 variable "inbound_cidr_blocks" {
   description = "A list of CIDR blocks from which inbound connections should be allowed to var.inbound_ports"
-  type        = list(string)
+  type        = set
 }
 
 variable "num_inbound_cidr_blocks" {
