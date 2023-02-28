@@ -25,7 +25,7 @@ module "ssh-inbound-acl" {
   public_subnet_ids = module.vpc.public_subnet_ids
   public_subnet_cidr_blocks = module.vpc.public_subnet_cidrs_blocks
   ingress_rule_number = 100
-  egress_rule_number = 100
+  egress_rule_number = 200
   protocol = "tcp"
   inbound_from_port = 22
   inbound_to_port = 22

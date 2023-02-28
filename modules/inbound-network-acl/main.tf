@@ -23,7 +23,7 @@ resource "aws_network_acl" "inbound" {
 resource "aws_network_acl_rule" "allow_inbound" {
   for_each = var.public_subnet_cidr_blocks
   network_acl_id = aws_network_acl.inbound.id
-  rule_number    = var.ingress_rule_number + length(var.public_subnet_cidr_blocks) * 5
+  rule_number    = var.ingress_rule_number + length(var.public_subnet_cidr_blocks) * parseint(each.key, 10)
   egress         = false
   protocol       = var.protocol
   rule_action    = "allow"
@@ -41,7 +41,7 @@ resource "aws_network_acl_rule" "allow_inbound" {
 resource "aws_network_acl_rule" "allow_outbound_return" {
   for_each = var.public_subnet_cidr_blocks
   network_acl_id = aws_network_acl.inbound.id
-  rule_number    = var.egress_rule_number + length(var.public_subnet_cidr_blocks)
+  rule_number    = var.egress_rule_number + length(var.public_subnet_cidr_blocks) * parseint(each.key, 10)
   egress         = true
   protocol       = var.protocol
   rule_action    = "allow"
