@@ -8,6 +8,14 @@ resource "aws_instance" "bastion" {
   key_name      = var.key_name
   vpc_security_group_ids = [aws_security_group.bastion.id]
 
+  user_data = <<-EOF
+  #!/bin/bash
+  # Install AWS SSM agent
+  sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+  sudo systemctl enable amazon-ssm-agent
+  sudo systemctl start amazon-ssm-agent
+  EOF
+
   tags = {
     Name = "${var.environment}-bastion-host"
   }
