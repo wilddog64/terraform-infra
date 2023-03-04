@@ -30,4 +30,3 @@ module "ssh-inbound-acl" {
   inbound_from_port = 22
   inbound_to_port = 22
 }
-
