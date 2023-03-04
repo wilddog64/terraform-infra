@@ -49,26 +49,26 @@ variable "ephemeral_to_port" {
 
 variable "vpc_name" {
   description = "a name of this vpc. mainly used for tagging the vpc resource"
-  type = string
+  type        = string
 }
 
 variable "vpc_id" {
   description = "a vpc id"
-  type = string
+  type        = string
 }
 
 variable "public_subnet_ids" {
-  description = "a list of pubic subnet ids" 
-  type = list(string)
+  description = "a list of pubic subnet ids"
+  type        = list(string)
 }
 
 variable "public_subnet_cidr_blocks" {
   description = "a list of public subnet cidr blocks"
-  type = map(string)
+  type        = map(string)
 }
 
 variable "custom_tags" {
   description = "a dictionary of user prvided tags"
-  type = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
 }

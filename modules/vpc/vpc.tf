@@ -1,14 +1,14 @@
 # Create the VPC
 
 locals {
-  public_az = keys(var.public_subnet_cidrblock)[0]
-  public_subnet_set = {for s in var.public_subnet_cidrblock[local.public_az]: index(var.public_subnet_cidrblock[local.public_az], s) => s}
-  private_az = keys(var.private_subnet_cidrblock)[0]
-  private_subnet_set = {for s in var.private_subnet_cidrblock[local.private_az]: index(var.private_subnet_cidrblock[local.private_az], s) => s}
+  public_az          = keys(var.public_subnet_cidrblock)[0]
+  public_subnet_set  = { for s in var.public_subnet_cidrblock[local.public_az] : index(var.public_subnet_cidrblock[local.public_az], s) => s }
+  private_az         = keys(var.private_subnet_cidrblock)[0]
+  private_subnet_set = { for s in var.private_subnet_cidrblock[local.private_az] : index(var.private_subnet_cidrblock[local.private_az], s) => s }
 }
 
 resource "aws_vpc" "cloud" {
-  cidr_block = var.cidr_block
+  cidr_block           = var.cidr_block
   enable_dns_support   = true
   enable_dns_hostnames = true
 
@@ -21,9 +21,9 @@ resource "aws_vpc" "cloud" {
 resource "aws_subnet" "public" {
   for_each = local.public_subnet_set
 
-  vpc_id            = aws_vpc.cloud.id
-  cidr_block        = each.value
-  availability_zone = local.public_az
+  vpc_id                  = aws_vpc.cloud.id
+  cidr_block              = each.value
+  availability_zone       = local.public_az
   map_public_ip_on_launch = true
 
   tags = {
@@ -55,7 +55,7 @@ resource "aws_internet_gateway" "cloud" {
 
 // create NAT elastic IPs
 resource "aws_eip" "nat" {
-  vpc = true
+  vpc   = true
   count = length(local.public_subnet_set)
 
   tags = {
@@ -97,7 +97,7 @@ resource "aws_route_table_association" "public" {
   // count = length(aws_subnet.public)
   for_each = local.public_subnet_set
 
-  subnet_id = aws_subnet.public[each.key].id
+  subnet_id      = aws_subnet.public[each.key].id
   route_table_id = aws_route_table.cloud[each.key].id
 }
 
@@ -105,6 +105,6 @@ resource "aws_route_table_association" "private" {
   // count = length(aws_subnet.public)
   for_each = local.private_subnet_set
 
-  subnet_id = aws_subnet.private[each.key].id
+  subnet_id      = aws_subnet.private[each.key].id
   route_table_id = aws_route_table.cloud[each.key].id
 }

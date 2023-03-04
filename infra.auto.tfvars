@@ -1,7 +1,7 @@
-environment = "sandbox"
-bastion_ami_id = "ami-0d01d792ec4d2b4b4" # CiscoHardended Ubuntu-22.04
+environment           = "sandbox"
+bastion_ami_id        = "ami-0d01d792ec4d2b4b4" # CiscoHardended Ubuntu-22.04
 bastion_instance_type = "t4g.small"
-key_name = "bastion_key"
+key_name              = "bastion_key"
 
 vpc_cidr_block = "10.0.0.0/16"
 vpc_public_subnet_cidrblocks = {

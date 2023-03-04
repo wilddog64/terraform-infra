@@ -1,12 +1,12 @@
 resource "aws_flow_log" "vpc" {
-  traffic_type   = "ALL"
+  traffic_type = "ALL"
 
   # The ID of the VPC to enable flow logs for
   vpc_id = aws_vpc.cloud.id
 
   # forward vpc flow log to cloudwatch
   log_destination = aws_cloudwatch_log_group.vpc_traffic.arn
-   iam_role_arn    = aws_iam_role.cloudwatch.arn
+  iam_role_arn    = aws_iam_role.cloudwatch.arn
 }
 
 resource "aws_cloudwatch_log_group" "vpc_traffic" {
