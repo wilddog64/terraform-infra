@@ -17,3 +17,18 @@ variable "key_name" {
   description = "an ec2 instance keypair"
   type = string
 }
+
+variable "vpc_public_subnet_cidrblocks" {
+  description = "a map of public subnet cidr blocks"
+  type = map(list(string))
+}
+
+variable "vpc_private_subnet_cidrblocks" {
+  description = "a map of private subnet cidr blocks"
+  type = map(list(string))
+}
+
+variable "vpc_cidr_block" {
+  description = "a valid cidr block for a vpc"
+  type = string
+}
