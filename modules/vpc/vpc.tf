@@ -85,7 +85,7 @@ resource "aws_route_table" "igw" {
   route {
     cidr_block = "0.0.0.0/0"
     // nat_gateway_id = index(aws_nat_gateway.public.*.id, count.index)
-    nat_gateway_id = aws_nat_gateway.public[each.key].id
+    gateway_id = aws_internet_gateway.igw.id
   }
 
   tags = {
