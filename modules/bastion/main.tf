@@ -1,7 +1,10 @@
+data "aws_ssm_parameter" "ubuntu-ami" {
+  name = "/aws/service/canonical/ubuntu/server/20.04/stable/current/amd64/hvm/ebs-gp2/ami-id"
+}
 # Create the bastion host instance
 resource "aws_instance" "bastion" {
   # ami           = "ami-0c55b159cbfafe1f0"
-  ami = var.ami_id
+  ami = data.aws_ssm_parameter.ubuntu-ami.value
   # instance_type = "t2.micro"
   instance_type          = var.instance_type
   subnet_id              = var.vpc_public_subnet_id
