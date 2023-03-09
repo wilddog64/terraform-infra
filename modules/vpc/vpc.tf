@@ -45,7 +45,7 @@ resource "aws_subnet" "private" {
 }
 
 # Create the internet gateway
-resource "aws_internet_gateway" "cloud" {
+resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.cloud.id
 
   tags = {
@@ -77,7 +77,7 @@ resource "aws_nat_gateway" "public" {
 }
 
 # Create a route table and add a route to the internet gateway
-resource "aws_route_table" "cloud" {
+resource "aws_route_table" "igw" {
   for_each = aws_nat_gateway.public
 
   vpc_id = aws_vpc.cloud.id
@@ -98,7 +98,7 @@ resource "aws_route_table_association" "public" {
   for_each = local.public_subnet_set
 
   subnet_id      = aws_subnet.public[each.key].id
-  route_table_id = aws_route_table.cloud[each.key].id
+  route_table_id = aws_route_table.igw[each.key].id
 }
 
 resource "aws_route_table_association" "private" {
@@ -106,5 +106,5 @@ resource "aws_route_table_association" "private" {
   for_each = local.private_subnet_set
 
   subnet_id      = aws_subnet.private[each.key].id
-  route_table_id = aws_route_table.cloud[each.key].id
+  route_table_id = aws_route_table.igw[each.key].id
 }
