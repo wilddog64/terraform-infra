@@ -12,7 +12,7 @@
 
 resource "aws_network_acl" "inbound" {
   vpc_id     = var.vpc_id
-  subnet_ids = var.public_subnet_ids
+  subnet_ids = var.inbound_subnet_ids
 
   tags = merge(
     { "Name" = "${var.vpc_name}-public-subnets" },
