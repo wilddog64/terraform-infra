@@ -32,4 +32,6 @@ module "ssh-inbound-acl" {
   protocol                  = "tcp"
   inbound_from_port         = 22
   inbound_to_port           = 22
+  ephemeral_from_port       = 1024
+  ephemeral_to_port         = 65535
 }
